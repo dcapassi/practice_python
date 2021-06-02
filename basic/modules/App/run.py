@@ -4,12 +4,13 @@ from db.createDatabase import createDatabase
 from db.createTable import createTable
 from db.insertData import insertData
 
-
 from mail.message import createMessage
 from mail.send import sendEmail
+
 import sys
 import csv
 import json
+import os.path
 
 mySqlConnection = createConnection(DADOS_DB)
 if mySqlConnection == None:
@@ -24,17 +25,6 @@ createDatabase(mySqlConnection, dbName)
 columns = "(uid VARCHAR(255), db_name VARCHAR(255), owner_email VARCHAR(255), manager_email VARCHAR(255), integrity VARCHAR(255), availability VARCHAR(255), confidentiality VARCHAR(255))"
 tableName = 'databases_classification'
 createTable(mySqlConnection, dbName, tableName, columns)
-
-lista_usuarios = []
-with open("userList.csv", encoding='utf-8') as users_refer:
-    users = csv.reader(users_refer, delimiter=',')
-    for linha in users:
-        id = linha[0]
-        user = linha[1]
-        state = linha[2]
-        manager_mail = linha[3]
-        lista_usuarios.append(
-            {"id": linha[0], "user": linha[1], "state": linha[2], "manager_mail": linha[3]})
 
 
 def clearDbClassification():
@@ -55,8 +45,19 @@ def getDataAsTuple(db_classification):
     return (db_classification["uid"], db_classification["dn_name"], db_classification["owner_email"], db_classification["manager_email"], db_classification["integrity"], db_classification["availability"], db_classification["confidentiality"])
 
 
+lista_usuarios = []
+with open(os.path.dirname(__file__) + "/../Data/userList.csv", encoding='utf-8') as users_refer:
+    users = csv.reader(users_refer, delimiter=',')
+    for linha in users:
+        id = linha[0]
+        user = linha[1]
+        state = linha[2]
+        manager_mail = linha[3]
+        lista_usuarios.append(
+            {"id": linha[0], "user": linha[1], "state": linha[2], "manager_mail": linha[3]})
+
 # Ler o Json e pegar os campos corretos para gravar no banco
-with open('dblist.json') as json_file:
+with open(os.path.dirname(__file__) + "/../Data/dbLIst.json") as json_file:
     data = json.load(json_file)
     for p in data["db_list"]:
         try:
