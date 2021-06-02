@@ -3,7 +3,6 @@ from email.mime.text import MIMEText
 
 # Função para criar o campo da mensagem
 
-
 def createMessage(sender, destination, subject, body, type='plain'):
     msg = MIMEMultipart()
     msg['From'] = sender

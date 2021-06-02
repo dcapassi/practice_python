@@ -18,3 +18,5 @@ def createTable(sqlConnection, databaseName, tableName, columns):
                 exitCode = -1
             finally:
                 return exitCode
+
+
